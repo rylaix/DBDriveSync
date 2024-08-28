@@ -21,8 +21,24 @@ def list_postgres_databases():
     Returns:
         list: A list of database names.
     """
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_dir, '..', 'config.ini')  # Adjust path to point to base directory
+
+    print(f"Loading configuration from: {config_path}")
+
+    # Check if the config file exists
+    if not os.path.exists(config_path):
+        print(f"Error: Configuration file {config_path} not found.")
+        return []
+
+    # Load the configuration file
     config = configparser.ConfigParser()
-    config.read('config/config.ini')
+    config.read(config_path)
+
+    # Ensure the POSTGRESQL section is present
+    if 'POSTGRESQL' not in config:
+        print("Error: 'POSTGRESQL' section not found in config.ini.")
+        return []
 
     # Read PostgreSQL credentials from config file
     host = config['POSTGRESQL']['HOST']
