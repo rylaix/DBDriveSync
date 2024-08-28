@@ -4,3 +4,9 @@ BACKUP_FOLDER_ID = <Google Drive Folder ID>
 
 [SCHEDULER]
 BACKUP_TIME = 01:00
+
+[POSTGRESQL]
+HOST = yourhost
+PORT = yourport
+USER = youruser
+PASSWORD = yourpassword

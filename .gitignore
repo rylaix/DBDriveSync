@@ -21,7 +21,8 @@ logs/*
 # Except for __init__.py
 !logs/__init__.py
 
-# Ignore all .json files in the config directory
+# Ignore all .json files in the config directory and sensetive files
 config/*.json
+config.ini
 
 # Additional custom directories or files can be added here, if it will be needed in future development.
