@@ -13,8 +13,17 @@ def load_gdrive_config():
     Returns:
         tuple: Credentials object and backup folder ID.
     """
+    # Get the base directory of the project
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_dir, '..', 'config.ini')  # Adjust path to point to base directory
+
+    # Load the configuration file
     config = configparser.ConfigParser()
-    config.read('config/config.ini')
+    config.read(config_path)
+
+    # Check if the GOOGLE_DRIVE section exists
+    if 'GOOGLE_DRIVE' not in config:
+        raise KeyError('GOOGLE_DRIVE section not found in config.ini')
 
     credentials = service_account.Credentials.from_service_account_file(
         config['GOOGLE_DRIVE']['CREDENTIALS_FILE'],

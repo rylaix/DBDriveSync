@@ -53,17 +53,23 @@ def list_postgres_databases():
     databases = []
 
     try:
+        # Constructing the psql command to get a list of databases
+        command = ['psql', '-h', host, '-p', port, '-U', user, '-t', '-c', 'SELECT datname FROM pg_database WHERE datistemplate = false;']
+        print(f"Running command: {' '.join(command)}")
+
         # Running psql command to list databases
-        output = subprocess.check_output(['psql', '-h', host, '-p', port, '-U', user, '-l'], universal_newlines=True)
-        for line in output.splitlines():
-            if '|' in line and not line.startswith(' '):
-                db = line.split('|')[0].strip()
-                databases.append(db)
-    except FileNotFoundError as e:
+        output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
+        print(f"Command output: {output}")
+
+        # Split the output by lines and strip extra spaces
+        databases = [line.strip() for line in output.splitlines() if line.strip()]
+
+    except FileNotFoundError:
         print("Error: 'psql' command not found. Please ensure PostgreSQL is installed and the 'psql' command is available in your PATH.")
     except subprocess.CalledProcessError as e:
-        print(f"Error listing databases: {e.output}")
+        print(f"Error running psql command: {e.output}")
     except Exception as e:
-        print(f"Error listing databases: {e}")
-    
+        print(f"Unexpected error: {e}")
+
+    print(f"Databases found: {databases}")
     return databases

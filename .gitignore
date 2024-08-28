@@ -15,11 +15,13 @@ build/
 # Ignore VSCode settings
 .vscode/
 
-# Ignore everything in the logs directory
+# Ignore everything in the logs and backups directory
 logs/*
+backups/*
 
 # Except for __init__.py
 !logs/__init__.py
+!backups/__init__.py
 
 # Ignore all .json files in the config directory and sensetive files
 config/*.json

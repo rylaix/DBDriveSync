@@ -3,6 +3,7 @@
 import os
 import subprocess
 from datetime import datetime
+import configparser
 
 def create_backup_folder():
     """
@@ -26,9 +27,22 @@ def backup_database(db_name, backup_folder):
     Returns:
         str: The path to the backup file.
     """
+    config = configparser.ConfigParser()
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_dir, '..', 'config.ini')
+    config.read(config_path)
+
+    host = config['POSTGRESQL']['HOST']
+    port = config['POSTGRESQL']['PORT']
+    user = config['POSTGRESQL']['USER']
+    password = config['POSTGRESQL']['PASSWORD']
+
+    # Set the password environment variable for pg_dump
+    os.environ['PGPASSWORD'] = password
+
     backup_file = os.path.join(backup_folder, f"{db_name}.sql")
     try:
-        subprocess.check_call(['pg_dump', '-Fc', '-f', backup_file, db_name])
+        subprocess.check_call(['pg_dump', '-h', host, '-p', port, '-U', user, '-Fc', '-f', backup_file, db_name])
         print(f"Database {db_name} backed up successfully to {backup_file}")
     except Exception as e:
         print(f"Error backing up {db_name}: {e}")
@@ -46,9 +60,9 @@ def backup_databases(databases):
     """
     backup_folder = create_backup_folder()
     backup_files = []
-    
+
     for db in databases:
         backup_file = backup_database(db, backup_folder)
         backup_files.append(backup_file)
-    
-    return backup_files
+
+    return backup_folder
