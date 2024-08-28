@@ -4,7 +4,7 @@ import schedule
 import time
 from src.system_info import list_postgres_databases
 from src.backup import backup_databases
-from src.gdrive_upload.py import upload_folder_to_gdrive
+from src.gdrive_upload import upload_folder_to_gdrive
 
 def run_backup_and_upload():
     """
